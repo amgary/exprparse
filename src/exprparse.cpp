@@ -454,7 +454,7 @@ namespace exprparse
     //********************* Define all tests *****************************//
     void print_test_log_header()
     {
-        fprintf(stdout, "%-30s%15s%15s%15s\r\n", "Expression", "Expected", "Actual", "Status");
+        fprintf(stdout, "%-30s%15s%15s%-15s\r\n", "Expression", "Expected", "Actual", " Status");
     }
     
     void log_test_result(const string & expression, double expected, double actual, Status & status)
@@ -465,7 +465,7 @@ namespace exprparse
         }
 
         string status_message = get_status_string(status);
-        fprintf(stdout, "%-29s %14.5f %14.5f %s\r\n", expression.c_str(), expected, actual, status_message.c_str());
+        fprintf(stdout, "%-29s %15.5f %14.5f %s\r\n", expression.c_str(), expected, actual, status_message.c_str());
     }
 
     Status test_simple_number()
@@ -540,6 +540,42 @@ namespace exprparse
         return Status::SUCCESS;
     }
 
+    Status test_multiply()
+    {
+        string simple_number = string("+1.0e2*-0.5");
+        double expected_value = +1.0e2*-0.5;
+        double result_value;
+        Status ret_val;
+
+        ret_val = parse_expression(simple_number, &result_value);
+        log_test_result(simple_number, expected_value, result_value, ret_val);
+        return Status::SUCCESS;
+    }
+
+    Status test_multiply_negative()
+    {
+        string simple_number = string("-1.0e2*-0.5");
+        double expected_value = -1.0e2*-0.5;
+        double result_value;
+        Status ret_val;
+
+        ret_val = parse_expression(simple_number, &result_value);
+        log_test_result(simple_number, expected_value, result_value, ret_val);
+        return Status::SUCCESS;
+    }
+
+    Status test_power()
+    {
+        string simple_number = string("4**3.5");
+        double expected_value = pow(4.0, 3.5);
+        double result_value;
+        Status ret_val;
+
+        ret_val = parse_expression(simple_number, &result_value);
+        log_test_result(simple_number, expected_value, result_value, ret_val);
+        return Status::SUCCESS;
+    }
+
     Status run_tests()
     {
         print_test_log_header();
@@ -548,6 +584,9 @@ namespace exprparse
         test_add_numbers();
         test_add_negative_numbers();
         test_divide();
-        return test_divide_negative_numbers();
+        test_divide_negative_numbers();
+        test_multiply();
+        test_multiply_negative();
+        return test_power();
     }
 }
