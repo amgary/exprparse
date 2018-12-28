@@ -6,6 +6,7 @@
 // Copyright 2018 Alex Gary
 //
 #include "exprtests.h"
+#include "gtest/gtest.h"
 
 #include <cstddef>
 #include <math.h>
@@ -13,142 +14,104 @@
 using namespace std;
 
 namespace exprparse {
-    //********************* Define all tests *****************************//
-    void print_test_log_header()
+
+    void common_success_test_eval(string expression, double expected_value)
     {
-        fprintf(stdout, "%-30s%15s%15s%-15s\r\n", "Expression", "Expected", "Actual", " Status");
+        double result_value;
+        Status ret_val;
+        std::cerr << "[          ]     Expr = " << expression << std::endl;
+        ret_val = parse_expression(expression, &result_value);
+        EXPECT_EQ(ret_val, Status::SUCCESS);
+        EXPECT_FLOAT_EQ(result_value, expected_value);
     }
 
-    void log_test_result(const string & expression, double expected, double actual, Status & status)
+    TEST(ParseNumber, PositiveSpace)
     {
-        if (status == Status::SUCCESS && fabs(expected - actual) > 1.0e-10)
-        {
-            status = Status::ERROR;
-        }
-
-        string status_message = get_status_string(status);
-        fprintf(stdout, "%-29s %15.5f %14.5f %s\r\n", expression.c_str(), expected, actual, status_message.c_str());
-    }
-
-    Status test_simple_number()
-    {
-        string simple_number = string(" 10.0");
+        string expression = string(" 10.0");
         double expected_value = 10.0;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval(expression, expected_value);
     }
 
-    Status test_simple_negative_number()
+    TEST(ParseNumber, NegativeNumber)
     {
-        string simple_number = string("-10.0");
+        string expression = string("-10.0");
         double expected_value = -10.0;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval(expression, expected_value);
     }
 
-    Status test_add_numbers()
+    TEST(ParseNumber, Exponential)
     {
-        string simple_number = string(" 10.0+0.5E1");
-        double expected_value = 10.0 + 0.5E1;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval("10.0e5", 10.0e5);
+        common_success_test_eval("10.0E5", 10.0E5);
+        common_success_test_eval("10.0E+05", 10.0E5);
     }
 
-    Status test_add_negative_numbers()
+    TEST(ParseNumber, NegativeExp)
     {
-        string simple_number = string("-10.0+-0.5E1");
-        double expected_value = -10.0 - 0.5E1;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval("10.0e-5", 10.0e-5);
+        common_success_test_eval("10.0E-5", 10.0E-5);
+        common_success_test_eval("10.0E-05", 10.0E-5);
     }
 
-    Status test_divide()
+    TEST(Operators, BinaryAdd)
     {
-        string simple_number = string("10.0/0.5E1");
-        double expected_value = 10.0 / 0.5E1;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval("10.0 + 5.0", 15.0);
+        common_success_test_eval("10.0+5.0", 15.0);
     }
 
-    Status test_divide_negative_numbers()
+    TEST(Operators, BinarySubtract)
     {
-        string simple_number = string("-10.0/-0.5E1");
-        double expected_value = -10.0 / -0.5E1;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval("10.0 - 5.0", 5.0);
+        common_success_test_eval("10.0-5.0", 5.0);
     }
 
-    Status test_multiply()
+    TEST(Operators, Multiply)
     {
-        string simple_number = string("+1.0e2*-0.5");
-        double expected_value = +1.0e2*-0.5;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval("2.5*5.0", 2.5*5.0);
+        common_success_test_eval("10e+5*2.0", 10.0e5*2.0);
     }
 
-    Status test_multiply_negative()
+    TEST(Operators, Divide)
     {
-        string simple_number = string("-1.0e2*-0.5");
-        double expected_value = -1.0e2*-0.5;
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval("10.0/5.0", 2.0);
+        common_success_test_eval("15.0/5.0", 3.0);
     }
 
-    Status test_power()
+    TEST(Operators, Power)
     {
-        string simple_number = string("4**3.5");
-        double expected_value = pow(4.0, 3.5);
-        double result_value;
-        Status ret_val;
-
-        ret_val = parse_expression(simple_number, &result_value);
-        log_test_result(simple_number, expected_value, result_value, ret_val);
-        return Status::SUCCESS;
+        common_success_test_eval("2.0**3.0", 8.0);
+        common_success_test_eval("2.0^4.0", 16.0);
+        common_success_test_eval("4.0^0.5", 2.0);
     }
 
-    Status run_tests()
+    TEST(Operators, Unary)
     {
-        print_test_log_header();
-        test_simple_number();
-        test_simple_negative_number();
-        test_add_numbers();
-        test_add_negative_numbers();
-        test_divide();
-        test_divide_negative_numbers();
-        test_multiply();
-        test_multiply_negative();
-        return test_power();
+        common_success_test_eval("-2.0", -2.0);
+        common_success_test_eval("-10.0/-2.0", 5.0);
+        common_success_test_eval("-10.0/+3.0", -10.0/3.0);
+    }
+
+    TEST(Precedence, Multiply)
+    {
+        common_success_test_eval("5.0-3.0*5.0", -10.0);
+    }
+
+    TEST(Precedence, Divide)
+    {
+        common_success_test_eval("5.0-10.0/-5.0", 7.0);
+    }
+
+    TEST(Precedence, Power)
+    {
+        common_success_test_eval("5.0+4.0^-0.5", 5.5);
+        common_success_test_eval("5.0+4.0**-0.5", 5.5);
+        common_success_test_eval("5.0-4.0**2.0", -11.0);
+        common_success_test_eval("3.0^2.0^3.0", 6561.0);
+    }
+
+    TEST(Precedence, Grouping)
+    {
+        common_success_test_eval("(12.0+4.0)^-0.5", 0.25);
+        common_success_test_eval("(12.0+4.0)^0.5/5.0", 0.8);
     }
 }
