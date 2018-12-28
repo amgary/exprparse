@@ -62,6 +62,8 @@ namespace exprparse
     Status multiply(const double args[], const size_t &num_args, double* result);
     Status divide(const double args[], const size_t &num_args, double* result);
     Status power(const double args[], const size_t &num_args, double* result);
+    Status unary_minus(const double args[], const size_t &num_args, double* result);
+    Status unary_plus(const double args[], const size_t &num_args, double* result);
 
     // Declare helper functions
     void destroy_tokens(list<Token*> & tokens);
@@ -71,18 +73,20 @@ namespace exprparse
     Operator g_mult_op = {multiply, 2, 2, OperatorAssoc::LEFT};
     Operator g_divide_op = {divide, 2, 2, OperatorAssoc::LEFT};
     Operator g_power_op = {power, 3, 2, OperatorAssoc::RIGHT};
+    Operator g_unary_minus = {unary_minus, 3, 1, OperatorAssoc::RIGHT};
+    Operator g_unary_plus = {unary_plus, 3, 1, OperatorAssoc::RIGHT};
 
     // This could be put in an initialization function to avoid hardcoding
     const size_t MAX_OPERATOR_ARGS = 2;
 
     TokenRegex g_tokens_reg[] = {
-        {OPERATOR, regex(R"(^\+)"), &g_add_op},
-        {OPERATOR, regex(R"(^\-)"), &g_sub_op},
+        {NUMBER, regex(R"(^[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?)"), NULL},
+        {OPERATOR, regex(R"(^\*\*)"), &g_power_op},
+        {OPERATOR, regex(R"(^\^)"), &g_power_op},
         {OPERATOR, regex(R"(^\*)"), &g_mult_op},
         {OPERATOR, regex(R"(^/)"), &g_divide_op},
-        {OPERATOR, regex(R"(^\^)"), &g_power_op},
-        {OPERATOR, regex(R"(^\*\*)"), &g_power_op},
-        {NUMBER, regex(R"(^[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?)"), NULL},
+        {OPERATOR, regex(R"(^\+)"), &g_add_op},
+        {OPERATOR, regex(R"(^\-)"), &g_sub_op},
         {LEFT_BRACKET, regex(R"(^\()"), NULL},
         {LEFT_BRACKET, regex(R"(^\[)"), NULL},
         {RIGHT_BRACKET, regex(R"a(^\))a"), NULL},
@@ -147,8 +151,18 @@ namespace exprparse
                     }
                     else if (tok->ttype == TokenType::OPERATOR)
                     {
+                        bool isUnary = tokens.empty()
+                            || (tokens.back()->ttype != TokenType::NUMBER
+                                && tokens.back()->ttype != TokenType::RIGHT_BRACKET);
                         OperatorData* data = new OperatorData;
-                        data->op = (Operator*)tok_reg->data;
+                        if (!isUnary || (tok_reg->data != &g_sub_op && tok_reg->data != &g_add_op))
+                            data->op = (Operator*)tok_reg->data;
+                        else {
+                            if (tok_reg->data == &g_sub_op)
+                                data->op = &g_unary_minus;
+                            else
+                                data->op = &g_unary_plus;
+                        }
                         tok->data = data;
                     }
                     else
@@ -271,13 +285,10 @@ namespace exprparse
                 {
                     if (argument_stack.empty())
                     {
-                        args[iarg] = 0.0;
+                        return Status::TOO_FEW_ARGUMENTS;
                     }
-                    else
-                    {
-                        args[iarg] = argument_stack.top();
-                        argument_stack.pop();
-                    }
+                    args[iarg] = argument_stack.top();
+                    argument_stack.pop();
                 }
                 if (ret_val == Status::SUCCESS)
                 {
@@ -422,6 +433,21 @@ namespace exprparse
     {
         if (num_args != 2) return Status::ERROR;
         *result = pow(args[0], args[1]);
+        return Status::SUCCESS;
+    }
+
+    // Method to handle unary minus sign
+    Status unary_minus(const double args[], const size_t & num_args, double * result)
+    {
+        if (num_args != 1) return Status::ERROR;
+        *result = -1.0*args[0];
+        return Status::SUCCESS;
+    }
+
+    Status unary_plus(const double args[], const size_t & num_args, double * result)
+    {
+        if (num_args != 1) return Status::ERROR;
+        *result = args[0];
         return Status::SUCCESS;
     }
 
