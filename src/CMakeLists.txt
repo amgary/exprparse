@@ -1,7 +1,6 @@
-project (exprparse)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-add_executable(exprparse
-exprparse.h
-exprparse.cpp
-main.cpp
-)
+project (EXPRPARSE)
+
+add_subdirectory(exprparse)
+add_subdirectory(tests)
