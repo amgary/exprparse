@@ -30,9 +30,4 @@ namespace exprparse
     Status parse_expression(const std::string & expression, double* result);
 
     std::string get_status_string(const Status & status);
-
-    // Function to run test suite
-    //
-    //
-    Status run_tests();
 }
