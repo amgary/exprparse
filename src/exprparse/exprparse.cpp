@@ -12,8 +12,13 @@
 #include <cstring>
 #include <stack>
 #include <queue>
+#include <sstream>
 
 using namespace std;
+
+#define EXPRPARSE_VERSION_MAJOR 0
+#define EXPRPARSE_VERSION_MINOR 1
+#define EXPRPARSE_VERSION_PATCH 0
 
 namespace exprparse
 {
@@ -370,6 +375,14 @@ namespace exprparse
         default:
             return string("Unknown Status");
         }
+    }
+
+    std::string get_version()
+    {
+        ostringstream o;
+        o << EXPRPARSE_VERSION_MAJOR << "." << EXPRPARSE_VERSION_MINOR;
+        o << "." << EXPRPARSE_VERSION_PATCH;
+        return o.str();
     }
 
     // Method to free all tokens in list

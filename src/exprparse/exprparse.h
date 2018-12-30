@@ -31,4 +31,7 @@ namespace exprparse
 
     // Returns string name of the status enum
     std::string get_status_string(const Status & status);
+
+    // Returns version string
+    std::string get_version();
 }
