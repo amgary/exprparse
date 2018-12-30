@@ -131,4 +131,30 @@ namespace exprparse {
         common_error_test("(1-2", Status::UNMATCHED_BRACKETS);
         common_error_test("((1-2)+1/2", Status::UNMATCHED_BRACKETS);
     }
+
+    TEST(InvalidExpression, DivideByZero)
+    {
+        common_error_test("2/0", Status::DIVIDE_BY_ZERO);
+        common_error_test("5/(1-1)", Status::DIVIDE_BY_ZERO);
+    }
+
+    TEST(InvalidExpression, UnknownToken)
+    {
+        common_error_test("abc", Status::UNKNOWN_TOKEN);
+        common_error_test("$", Status::UNKNOWN_TOKEN);
+        common_error_test("&", Status::UNKNOWN_TOKEN);
+    }
+
+    TEST(InvalidExpression, TooManyArguments)
+    {
+        common_error_test("1.0 2.0", Status::TOO_MANY_ARGUMENTS);
+        common_error_test("5.0(1.0+2.0)", Status::TOO_MANY_ARGUMENTS);
+    }
+
+    TEST(InvalidExpression, TooFewArguments)
+    {
+        common_error_test("*1.0", Status::TOO_FEW_ARGUMENTS);
+        common_error_test("3.0/", Status::TOO_FEW_ARGUMENTS);
+        common_error_test("4.0^", Status::TOO_FEW_ARGUMENTS);
+    }
 }
