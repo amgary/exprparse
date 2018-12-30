@@ -19,10 +19,19 @@ namespace exprparse {
     {
         double result_value;
         Status ret_val;
-        std::cerr << "[          ]     Expr = " << expression << std::endl;
+        cerr << "[          ]     Expr = " << expression << endl;
         ret_val = parse_expression(expression, &result_value);
         EXPECT_EQ(ret_val, Status::SUCCESS);
         EXPECT_DOUBLE_EQ(result_value, expected_value);
+    }
+
+    void common_error_test(string expression, Status expected_status)
+    {
+        double result_value;
+        Status ret_val;
+        cerr << "[          ]     Expr = " << expression << endl;
+        ret_val = parse_expression(expression, &result_value);
+        EXPECT_EQ(ret_val, expected_status);
     }
 
     TEST(ParseNumber, PositiveSpace)
@@ -113,5 +122,13 @@ namespace exprparse {
     {
         common_success_test_eval("(12.0+4.0)^-0.5", 0.25);
         common_success_test_eval("(12.0+4.0)^0.5/5.0", 0.8);
+    }
+
+    TEST(InvalidExpression, UnmatchedBrackets)
+    {
+        common_error_test("(", Status::UNMATCHED_BRACKETS);
+        common_error_test(")", Status::UNMATCHED_BRACKETS);
+        common_error_test("(1-2", Status::UNMATCHED_BRACKETS);
+        common_error_test("((1-2)+1/2", Status::UNMATCHED_BRACKETS);
     }
 }

@@ -349,7 +349,7 @@ namespace exprparse
 
         // Done with tokens, clean them up
         destroy_tokens(tokens);
-        return Status::SUCCESS;
+        return ret_val;
     }
 
     std::string get_status_string(const Status & status)
