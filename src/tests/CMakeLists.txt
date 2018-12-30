@@ -25,9 +25,6 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
                  ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
                  EXCLUDE_FROM_ALL)
 
-#target_link_libraries(example gtest_main)
-#add_test(NAME example_test COMMAND example)
-
 include_directories(${EXPRPARSE_INCLUDE_DIR} "${gtest_SOURCE_DIR}/include")
 add_executable(exprtests
   exprtests.h
@@ -37,3 +34,5 @@ target_link_libraries(exprtests
 exprparse
 gtest_main
 )
+
+add_test(NAME exprparse_test COMMAND exprtests)
