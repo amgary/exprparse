@@ -29,5 +29,6 @@ namespace exprparse
     //		
     Status parse_expression(const std::string & expression, double* result);
 
+    // Returns string name of the status enum
     std::string get_status_string(const Status & status);
 }
