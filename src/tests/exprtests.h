@@ -9,4 +9,4 @@
 namespace exprparse {
     // Function to run test suite
     Status run_tests();
-}
+} // namespace exprparse

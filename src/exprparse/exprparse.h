@@ -7,8 +7,7 @@
 
 #include <string>
 
-namespace exprparse
-{
+namespace exprparse {
     typedef enum {
         SUCCESS,
         ERROR,
@@ -26,12 +25,12 @@ namespace exprparse
     // Arguments:
     //  expression: string that contains a mathematical expression
     //  result: double used to store the result of the computation
-    //		
-    Status parse_expression(const std::string & expression, double* result);
+    //
+    Status parse_expression(const std::string& expression, double* result);
 
     // Returns string name of the status enum
-    std::string get_status_string(const Status & status);
+    std::string get_status_string(const Status& status);
 
     // Returns version string
     std::string get_version();
-}
+} // namespace exprparse
