@@ -22,7 +22,7 @@ namespace exprparse {
         std::cerr << "[          ]     Expr = " << expression << std::endl;
         ret_val = parse_expression(expression, &result_value);
         EXPECT_EQ(ret_val, Status::SUCCESS);
-        EXPECT_FLOAT_EQ(result_value, expected_value);
+        EXPECT_DOUBLE_EQ(result_value, expected_value);
     }
 
     TEST(ParseNumber, PositiveSpace)
