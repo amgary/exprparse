@@ -27,7 +27,6 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 
 include_directories(${EXPRPARSE_INCLUDE_DIR} "${gtest_SOURCE_DIR}/include")
 add_executable(exprtests
-  exprtests.h
   exprtests.cpp
 )
 target_link_libraries(exprtests
