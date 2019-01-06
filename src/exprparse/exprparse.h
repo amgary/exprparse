@@ -24,6 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#ifndef EXPRPARSE_H
+#define EXPRPARSE_H
+
 #include <string>
 
 namespace exprparse {
@@ -53,3 +56,5 @@ namespace exprparse {
     // Returns version string
     std::string get_version();
 } // namespace exprparse
+
+#endif // !EXPRPARSE_H
