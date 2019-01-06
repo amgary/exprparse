@@ -10,3 +10,12 @@ add_subdirectory(exprcalc)
 if (BUILD_TESTING)
     add_subdirectory(tests)
 endif(BUILD_TESTING)
+
+install(TARGETS exprparse
+	LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+install(TARGETS exprcalc
+    RUNTIME DESTINATION bin)
+install(DIRECTORY ${EXPRPARSE_INCLUDE_DIR}
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h")
