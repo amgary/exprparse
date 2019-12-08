@@ -353,9 +353,9 @@ namespace exprparse {
             tokens.pop_front();
 
             if (tok->ttype == TokenType::NUMBER && tok->data != NULL) {
-                delete tok->data;
+                delete static_cast<NumberData*>(tok->data);
             } else if (tok->ttype == TokenType::OPERATOR && tok->data != NULL) {
-                delete tok->data;
+                delete static_cast<OperatorData*>(tok->data);
             }
 
             delete tok;
