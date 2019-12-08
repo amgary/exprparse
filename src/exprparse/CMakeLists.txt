@@ -6,3 +6,7 @@ ADD_LIBRARY(exprparse
     exprparse.h
     exprparse.cpp
 )
+
+install(TARGETS exprparse
+	LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)

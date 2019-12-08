@@ -7,3 +7,6 @@ add_executable(exprcalc
 target_link_libraries(exprcalc
 exprparse
 )
+
+install(TARGETS exprcalc
+    RUNTIME DESTINATION bin)
