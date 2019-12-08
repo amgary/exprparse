@@ -12,10 +12,31 @@ A simple c++ library to compute values from simple math expressions stored as st
 
 **tests** contains unit tests for the `exprparse` library using the googletest library.
 
-## Building
+## Building ExprParse
 `exprparse` uses [cmake](https://cmake.org/) to generate cross-platform build files.
 
 The project and `.gitignore` file is setup for out of source builds in a top level
 directory called `build`. However, any out of source folder is fine.
 
-`exprparse` depends on the [googletest](https://github.com/google/googletest) suite. The cmake project will download and build this dependency if testing is enabled. To disable building the tests, pass `-DBUILD_TESTING=OFF` to cmake.
+`exprparse` depends on the [googletest](https://github.com/google/googletest) suite for unit tests. The cmake project will download and build this dependency if testing is enabled. To disable building the tests, pass `-DBUILD_TESTING=OFF` to cmake.
+
+### Example build
+Starting from a terminal open in the same directory as this Readme
+
+```bash
+# Make build directory
+mkdir build
+cd build
+
+# Run cmake to generate build files (pass -DBUILD_TESTING=OFF to skip building the testsuite)
+cmake ../src
+
+# Build
+make
+
+# Run tests
+ctest
+
+# Install
+make install
+```
