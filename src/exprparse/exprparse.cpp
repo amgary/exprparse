@@ -118,7 +118,7 @@ namespace exprparse {
     // that it points to first character that is not whitespace
     //
     // Returns: 1 if whitespace successfully skipped, 0 if end of string was hit
-    short skip_whitespace(string::const_iterator& str_itr, string::const_iterator& end_iter) {
+    short skip_whitespace(string::const_iterator& str_itr, const string::const_iterator& end_iter) {
         while (str_itr != end_iter) {
             if (*str_itr == ' ' || *str_itr == '\t' || *str_itr == '\r' || *str_itr == '\f' || *str_itr == '\n') {
                 str_itr++;
