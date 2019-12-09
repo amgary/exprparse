@@ -1,4 +1,6 @@
 # ExprParse
+[![Actions Status](https://github.com/amgary/exprparse/workflows/ci/badge.svg)](https://github.com/amgary/exprparse/actions)
+
 A simple c++ library to compute values from simple math expressions stored as strings.
 
 ## License
