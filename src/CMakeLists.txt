@@ -1,9 +1,10 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
 
 project (EXPRPARSE)
 
 include(CTest)
 
+set (CMAKE_CXX_STANDARD 11)
 add_subdirectory(exprparse)
 add_subdirectory(exprcalc)
 
