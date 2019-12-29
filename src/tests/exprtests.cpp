@@ -57,6 +57,23 @@ namespace exprparse {
         common_success_test_eval(expression, expected_value);
     }
 
+    TEST(ParseNumber, LeadingDecimal) {
+        string expression = string(".2");
+        double expected_value = 0.2;
+        common_success_test_eval(expression, expected_value);
+    }
+
+    TEST(ParseNumber, NegativeLeadingDecimal) {
+        string expression = string("-.2");
+        double expected_value = -0.2;
+        common_success_test_eval(expression, expected_value);
+    }
+
+    TEST(ParseNumber, Integer) {
+        common_success_test_eval("1", 1);
+        common_success_test_eval("-5", -5);
+    }
+
     TEST(ParseNumber, NegativeNumber) {
         string expression = string("-10.0");
         double expected_value = -10.0;
@@ -67,12 +84,14 @@ namespace exprparse {
         common_success_test_eval("10.0e5", 10.0e5);
         common_success_test_eval("10.0E5", 10.0E5);
         common_success_test_eval("10.0E+05", 10.0E5);
+        common_success_test_eval(".2E+05", .2E5);
     }
 
     TEST(ParseNumber, NegativeExp) {
         common_success_test_eval("10.0e-5", 10.0e-5);
         common_success_test_eval("10.0E-5", 10.0E-5);
         common_success_test_eval("10.0E-05", 10.0E-5);
+        common_success_test_eval("-.1E+5", -.1E+5);
     }
 
     TEST(Operators, BinaryAdd) {
@@ -143,11 +162,15 @@ namespace exprparse {
         common_error_test("abc", Status::UNKNOWN_TOKEN);
         common_error_test("$", Status::UNKNOWN_TOKEN);
         common_error_test("&", Status::UNKNOWN_TOKEN);
+        common_error_test("..1", Status::UNKNOWN_TOKEN);
+        common_error_test("1e.1", Status::UNKNOWN_TOKEN);
+
     }
 
     TEST(InvalidExpression, TooManyArguments) {
         common_error_test("1.0 2.0", Status::TOO_MANY_ARGUMENTS);
         common_error_test("5.0(1.0+2.0)", Status::TOO_MANY_ARGUMENTS);
+        common_error_test("0..1", Status::TOO_MANY_ARGUMENTS);
     }
 
     TEST(InvalidExpression, TooFewArguments) {

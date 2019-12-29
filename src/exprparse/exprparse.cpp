@@ -101,7 +101,7 @@ namespace exprparse {
     // This could be put in an initialization function to avoid hardcoding
     const size_t MAX_OPERATOR_ARGS = 2;
 
-    TokenRegex g_tokens_reg[] = { { NUMBER, regex(R"(^[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?)"), NULL },
+    TokenRegex g_tokens_reg[] = { { NUMBER, regex(R"(^([0-9]+\.?|\.[0-9]+)[0-9]*([eE][+-]?[0-9]+)?)"), NULL },
                                   { OPERATOR, regex(R"(^\*\*)"), &g_power_op },
                                   { OPERATOR, regex(R"(^\^)"), &g_power_op },
                                   { OPERATOR, regex(R"(^\*)"), &g_mult_op },
